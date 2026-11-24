@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Consistency checks and journal tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install pyyaml
+      - name: App, Home Assistant package, journal and translations in sync
+        run: python3 tools/check.py
+      - name: Journal tests
+        run: python3 -m unittest discover -s tools -p "test_*.py" -v
+      - name: Shell scripts
+        run: for f in tools/*.sh; do bash -n "$f"; done
+
+  build:
+    name: Build the iOS app (unsigned)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Build
+        shell: bash
+        run: |
+          xcodebuild -project HealthHook.xcodeproj -target HealthHook -configuration Debug -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO build -quiet
