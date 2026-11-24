@@ -150,7 +150,9 @@ script:
     fields:
       home_assistant_url:
         name: Home Assistant URL
-        description: The address the iPhone uses to reach Home Assistant from anywhere, without /api/…
+        description: >-
+          The HTTPS address the iPhone uses to reach Home Assistant from anywhere (iOS refuses http://),
+          without /api/…
         required: true
         example: https://example.ui.nabu.casa
         selector:

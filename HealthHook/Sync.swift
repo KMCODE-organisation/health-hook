@@ -36,11 +36,13 @@ enum BackgroundRefresh {
 enum SendError: LocalizedError {
     case http(Int)
     case invalidURL
+    case notHTTPS
 
     var errorDescription: String? {
         switch self {
         case .http(let code): return String(localized: "Home Assistant answered HTTP \(String(code))")
         case .invalidURL: return String(localized: "Invalid webhook URL")
+        case .notHTTPS: return String(localized: "The webhook URL must start with https:// (iOS blocks unencrypted connections)")
         }
     }
 }
@@ -106,8 +108,12 @@ final class Sync: ObservableObject {
         let text = URLComponents(url: link, resolvingAgainstBaseURL: false)?
             .queryItems?.first { $0.name == "url" }?.value?
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let text, let url = URL(string: text), url.scheme == "https" || url.scheme == "http", url.host() != nil else {
+        guard let text, let url = URL(string: text), url.host() != nil else {
             update(SendError.invalidURL.localizedDescription)
+            return
+        }
+        guard url.scheme == "https" else {
+            update(SendError.notHTTPS.localizedDescription)
             return
         }
         proposedURL = text
@@ -122,8 +128,12 @@ final class Sync: ObservableObject {
             update(String(localized: "Enter the webhook URL below"))
             return nil
         }
-        guard let url = URL(string: text), url.scheme == "https" || url.scheme == "http" else {
+        guard let url = URL(string: text), url.host() != nil else {
             update(SendError.invalidURL.localizedDescription)
+            return nil
+        }
+        guard url.scheme == "https" else {
+            update(SendError.notHTTPS.localizedDescription)
             return nil
         }
         guard !selected.isEmpty else {

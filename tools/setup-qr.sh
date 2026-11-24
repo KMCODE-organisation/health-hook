@@ -13,8 +13,8 @@ else
   read -r URL
 fi
 case "$URL" in
-  http://*/api/webhook/?*|https://*/api/webhook/?*) ;;
-  *) echo "Not a webhook URL: expected https://<your Home Assistant>/api/webhook/<id>"; exit 1 ;;
+  https://*/api/webhook/?*) ;;
+  *) echo "Not a webhook URL: expected https://<your Home Assistant>/api/webhook/<id> (iOS refuses http://)"; exit 1 ;;
 esac
 ENCODED=$(/usr/bin/python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$URL")
 qrencode -t ansiutf8 "healthhook://config?url=$ENCODED"

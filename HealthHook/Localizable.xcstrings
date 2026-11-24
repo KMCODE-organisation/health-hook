@@ -722,6 +722,16 @@
         }
       }
     },
+    "The webhook URL must start with https:// (iOS blocks unencrypted connections)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’URL du webhook doit commencer par https:// (iOS bloque les connexions non chiffrées)"
+          }
+        }
+      }
+    },
     "Time in daylight": {
       "localizations": {
         "fr": {
