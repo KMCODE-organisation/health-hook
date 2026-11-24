@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """Generates homeassistant/packages/health_hook.yaml (one template sensor per metric of the app).
 
-Keep METRICS in sync with HealthHook/Catalog.swift. Run: python3 tools/generate_ha_package.py
+Keep METRICS in sync with HealthHook/Catalog.swift (checked by tools/check.py).
+Run: python3 tools/generate_ha_package.py          (writes the package)
+     python3 tools/generate_ha_package.py --check  (fails if the committed package is out of date)
 """
+import sys
 from pathlib import Path
 
 TOTAL, LATEST, SLEEP, DAY_AVG = "total", "latest", "sleep", "day_avg"
@@ -73,7 +76,10 @@ HEADER = """\
 #   2. secrets.yaml:         health_hook_webhook_id: <a long random string, e.g. from `openssl rand -hex 24`>
 #   3. Copy this file to /config/packages/health_hook.yaml
 #      and homeassistant/health_hook/journal.py to /config/health_hook/journal.py (daily journal, optional).
-#   4. Restart Home Assistant, then paste https://<your Home Assistant URL>/api/webhook/<id> in the app.
+#   4. Replace notify.notify with your phone's notify action (e.g. notify.mobile_app_my_iphone), restart Home Assistant.
+#   5. Configure the app: run the script "Health Hook — send the setup link" (Settings → Automations & scenes →
+#      Scripts) and tap the notification on the iPhone; or paste https://<your Home Assistant URL>/api/webhook/<id>
+#      in the app.
 #
 # Payload rules: key absent (metric not selected in the app) = sensor keeps its value; null (selected, no data)
 # = 0 for daily totals, unknown otherwise. Attribute `measured_at` = date of the latest sample.
@@ -132,7 +138,36 @@ automation:
         data:
           title: Health Hook
           message: >-
-            {% if trigger.id == 'day_before' %}The app expires tomorrow at {{ as_timestamp(states('sensor.health_hook_app_expiration')) | timestamp_custom('%H:%M') }}: reinstall it from Xcode (or let tools/reinstall.sh do it). Already reinstalled? Open it once to update the date.{% else %}The app has expired: it no longer opens or sends data until it is reinstalled from Xcode.{% endif %}
+            {% if trigger.id == 'day_before' %}The app expires tomorrow at {{ as_timestamp(states('sensor.health_hook_app_expiration')) | timestamp_custom('%H:%M') }}: reinstall it from Xcode (or let tools/reinstall.sh do it). Already reinstalled? Pull down in the app to update the date.{% else %}The app has expired: it no longer opens or sends data until it is reinstalled from Xcode.{% endif %}
+
+script:
+  health_hook_setup_link:
+    alias: Health Hook — send the setup link
+    description: >-
+      Sends a notification that configures the app in one tap (it asks for confirmation before saving the URL).
+      Change notify.notify to your phone's notify action.
+    icon: mdi:link-variant
+    fields:
+      home_assistant_url:
+        name: Home Assistant URL
+        description: >-
+          The HTTPS address the iPhone uses to reach Home Assistant from anywhere (iOS refuses http://),
+          without /api/…
+        required: true
+        example: https://example.ui.nabu.casa
+        selector:
+          text:
+            type: url
+    sequence:
+      - variables:
+          webhook_id: !secret health_hook_webhook_id
+          webhook_url: "{{ (home_assistant_url | trim | regex_replace('/+$', '')) ~ '/api/webhook/' ~ webhook_id }}"
+      - action: notify.notify
+        data:
+          title: Health Hook
+          message: Tap to connect the Health Hook app to this Home Assistant.
+          data:
+            url: "healthhook://config?url={{ webhook_url | urlencode }}"
 
 shell_command:
   health_hook_journal: "python3 /config/health_hook/journal.py add {{ b64 }}"
@@ -195,8 +230,19 @@ FOOTER = f"""
           {{% if p.get('expires_at') %}}{{{{ p.expires_at }}}}{{% elif this.state not in ['unknown', 'unavailable', '', none] %}}{{{{ this.state }}}}{{% else %}}{{{{ none }}}}{{% endif %}}
 """
 
+PACKAGE = Path(__file__).resolve().parent.parent / "homeassistant" / "packages" / "health_hook.yaml"
+
+
+def render():
+    return HEADER + "\n".join(sensor(*m) for m in METRICS) + "\n" + FOOTER
+
+
 if __name__ == "__main__":
-    out = HEADER + "\n".join(sensor(*m) for m in METRICS) + "\n" + FOOTER
-    path = Path(__file__).resolve().parent.parent / "homeassistant" / "packages" / "health_hook.yaml"
-    path.write_text(out, encoding="utf-8")
-    print(f"{path}: {len(METRICS)} metric sensors")
+    out = render()
+    if "--check" in sys.argv:
+        if PACKAGE.read_text(encoding="utf-8") != out:
+            sys.exit(f"{PACKAGE.name} is out of date: run python3 tools/generate_ha_package.py and commit it")
+        print(f"{PACKAGE.name} is up to date")
+    else:
+        PACKAGE.write_text(out, encoding="utf-8")
+        print(f"{PACKAGE}: {len(METRICS)} metric sensors")
