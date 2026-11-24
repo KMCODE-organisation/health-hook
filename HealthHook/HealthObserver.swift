@@ -20,11 +20,10 @@ enum HealthObserver {
         }
         guard types != observed else { return }
 
+        // Queries replaced without suspending (no `await`), so two overlapping calls cannot mix their queries.
         for q in queries { store.stop(q) }
         queries = []
-        for type in observed.subtracting(types) {
-            try? await store.disableBackgroundDelivery(for: type)
-        }
+        let removed = observed.subtracting(types)
         observed = types
 
         for type in types {
@@ -38,7 +37,8 @@ enum HealthObserver {
             }
             store.execute(query)
             queries.append(query)
-            try? await store.enableBackgroundDelivery(for: type, frequency: .hourly)
         }
+        for type in removed { try? await store.disableBackgroundDelivery(for: type) }
+        for type in types { try? await store.enableBackgroundDelivery(for: type, frequency: .hourly) }
     }
 }
