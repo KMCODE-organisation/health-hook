@@ -1,0 +1,23 @@
+name: New Health metric
+description: Ask for a piece of Apple Health data that Health Hook does not send yet
+labels: [metric]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Metric
+      description: Name as shown in the Health app, and the HealthKit identifier if you know it.
+      placeholder: "Mindful minutes (HKCategoryTypeIdentifier.mindfulSession)"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What would you do with it in Home Assistant?
+    validations:
+      required: false
+  - type: input
+    id: source
+    attributes:
+      label: Source device or app
+      placeholder: "Apple Watch, smart ring, scale…"

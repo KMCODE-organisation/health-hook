@@ -155,6 +155,11 @@ model (e.g. Ollama) to keep everything at home.
 - Background refresh is decided by iOS and not guaranteed; opening the app always sends.
 - Each user builds the app with their own Apple ID (no App Store or TestFlight distribution).
 
+## Contributing
+
+Issues and pull requests are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md) (adding a Health metric is a
+three-file change). Please never post your webhook URL or real health data.
+
 ## License
 
 [MIT](LICENSE). Not affiliated with Apple or the Open Home Foundation. Health Hook is not a medical device and its
@@ -191,3 +196,5 @@ que le Mac, ou branché).
 **Confidentialité** : aucun serveur, aucune statistique d'usage ; les données ne vont qu'à ton Home Assistant (et, si tu
 actives le bilan, au fournisseur d'IA que tu as configuré : préfère un modèle local pour tout garder chez toi).
 L'interface de l'app est en anglais et en français.
+
+**Contribuer** : issues et pull requests bienvenues (en anglais de préférence), voir [CONTRIBUTING.md](CONTRIBUTING.md).
