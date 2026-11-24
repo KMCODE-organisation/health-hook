@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="fond" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2BB3F0"/>
+      <stop offset="1" stop-color="#1255C9"/>
+    </linearGradient>
+    <linearGradient id="coeur" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF6B7D"/>
+      <stop offset="1" stop-color="#E8294A"/>
+    </linearGradient>
+    <filter id="ombre" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#06215A" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#fond)"/>
+  <!-- maison -->
+  <path d="M512 196 L842 470 Q858 484 858 505 L858 790 Q858 838 810 838 L214 838 Q166 838 166 790 L166 505 Q166 484 182 470 Z"
+        fill="#FFFFFF" filter="url(#ombre)" stroke="#FFFFFF" stroke-width="40" stroke-linejoin="round"/>
+  <!-- cœur -->
+  <path d="M512 770 C 430 705, 300 625, 300 520 C 300 455, 350 410, 410 410 C 455 410, 490 435, 512 470 C 534 435, 569 410, 614 410 C 674 410, 724 455, 724 520 C 724 625, 594 705, 512 770 Z"
+        fill="url(#coeur)"/>
+  <!-- pouls -->
+  <polyline points="318,575 430,575 462,515 500,650 540,470 574,575 706,575"
+            fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

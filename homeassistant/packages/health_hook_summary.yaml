@@ -1,0 +1,93 @@
+# Health Hook — optional AI summary (requires health_hook.yaml, the journal script and an AI Task entity)
+#
+# After a pull-to-refresh in the app, sends a compact, fixed-size summary of the journal (7/30/90-day averages per
+# metric, days since the previous summary, previous summary as memory) to an AI Task entity (OpenAI, Anthropic,
+# Google, Ollama…: Settings → Devices & services). No new summary when the journal has not changed.
+# Result: sensor.health_hook_summary (attribute `text`) + a notification.
+#
+# ⚠ Privacy: with a cloud AI provider, these health figures leave your home. Use a local model (Ollama) to avoid it.
+#
+# To adapt: `language`, the notify action (notify.notify), and ai_task `entity_id` if you have no default
+# AI Task entity (Settings → System → General → AI suggestions).
+
+automation:
+  - id: health_hook_summary_on_manual_sync
+    alias: Health Hook — summary after a manual sync
+    mode: single
+    triggers:
+      - trigger: event
+        event_type: health_hook_manual_sync
+    actions:
+      - action: script.turn_on
+        target:
+          entity_id: script.health_hook_summary
+
+script:
+  health_hook_summary:
+    alias: Health Hook — AI summary
+    icon: mdi:clipboard-pulse
+    mode: single
+    max_exceeded: silent
+    sequence:
+      - variables:
+          language: English
+      - action: shell_command.health_hook_journal_summary
+        data:
+          today: "{{ now().date().isoformat() }}"
+          since: "{{ state_attr('sensor.health_hook_summary', 'until') or '-' }}"
+        response_variable: journal
+        continue_on_error: true
+      - if: "{{ journal is not defined or journal.returncode | default(1) != 0 or not journal.stdout | default('') }}"
+        then:
+          - stop: Health journal unreadable (is /config/health_hook/journal.py installed?)
+      - variables:
+          fingerprint: "{{ (journal.stdout | from_json).fingerprint | default('') }}"
+      - if: "{{ fingerprint != '' and fingerprint == state_attr('sensor.health_hook_summary', 'fingerprint') }}"
+        then:
+          - stop: No new data since the previous summary
+      - action: ai_task.generate_data
+        data:
+          task_name: Health summary
+          # entity_id: ai_task.your_ai_task_entity
+          instructions: |-
+            You write a short personal health summary from Apple Health data (some days may be missing, e.g. when a
+            wearable was not worn: gaps are normal).
+
+            Format: plain text in {{ language }}, very short, no title, no list, no numbers: one sentence about the
+            overall state and the current trend, then one sentence with a single simple, concrete suggestion.
+
+            Rules: no medical diagnosis and no alarmist tone; if something looks concerning repeatedly (blood oxygen
+            often low, resting heart rate clearly rising…), the suggestion is to talk to a doctor. Averages use complete
+            days; "today" is partial for daily totals (steps, energy…), but today's sleep is last night. Ignore missing
+            or too sparse data.
+
+            {% set prev = state_attr('sensor.health_hook_summary', 'text') %}{% if prev %}Previous summary ({{ state_attr('sensor.health_hook_summary', 'until') }}), to account for the evolution without repeating it:
+            {{ prev }}{% else %}This is the first summary.{% endif %}
+
+            Data (JSON):
+            {{ journal.stdout }}
+        response_variable: answer
+      - event: health_hook_summary
+        event_data:
+          text: "{{ answer.data }}"
+          until: "{{ now().date().isoformat() }}"
+          fingerprint: "{{ fingerprint }}"
+      - action: notify.notify
+        data:
+          title: Health summary
+          message: "{{ answer.data | truncate(1000) }}"
+
+template:
+  - triggers:
+      - trigger: event
+        event_type: health_hook_summary
+    sensor:
+      - name: Health Hook summary
+        unique_id: health_hook_summary
+        device_class: timestamp
+        icon: mdi:clipboard-pulse
+        state: "{{ now().isoformat() }}"
+        attributes:
+          text: "{{ trigger.event.data.text }}"
+          until: "{{ trigger.event.data.until }}"
+          fingerprint: "{{ trigger.event.data.fingerprint }}"

@@ -1,0 +1,906 @@
+{
+  "sourceLanguage": "en",
+  "version": "1.0",
+  "strings": {
+    "%@ selected.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ sélectionnée(s)."
+          }
+        }
+      }
+    },
+    "%@ today (min / avg / max)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ du jour (min / moy / max)"
+          }
+        }
+      }
+    },
+    "Active energy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Énergie active"
+          }
+        }
+      }
+    },
+    "Activity": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activité"
+          }
+        }
+      }
+    },
+    "App valid until %@.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App valable jusqu'au %@."
+          }
+        }
+      }
+    },
+    "Blood glucose": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glycémie"
+          }
+        }
+      }
+    },
+    "Blood oxygen": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oxygène sanguin"
+          }
+        }
+      }
+    },
+    "Blood pressure (diastolic)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tension (diastolique)"
+          }
+        }
+      }
+    },
+    "Blood pressure (systolic)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tension (systolique)"
+          }
+        }
+      }
+    },
+    "Body": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Corps"
+          }
+        }
+      }
+    },
+    "Body fat": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masse grasse"
+          }
+        }
+      }
+    },
+    "Body mass index": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indice de masse corporelle"
+          }
+        }
+      }
+    },
+    "Body temperature": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Température corporelle"
+          }
+        }
+      }
+    },
+    "Caffeine": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caféine"
+          }
+        }
+      }
+    },
+    "Carbohydrates": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glucides"
+          }
+        }
+      }
+    },
+    "Change": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier"
+          }
+        }
+      }
+    },
+    "Cycling distance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance à vélo"
+          }
+        }
+      }
+    },
+    "Data to send": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données à envoyer"
+          }
+        }
+      }
+    },
+    "Defaults": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Par défaut"
+          }
+        }
+      }
+    },
+    "Deselect all": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout désélectionner"
+          }
+        }
+      }
+    },
+    "Dietary energy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Énergie alimentaire"
+          }
+        }
+      }
+    },
+    "Double support time": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temps en double appui"
+          }
+        }
+      }
+    },
+    "Enter the webhook URL below": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renseigne l'URL du webhook ci-dessous"
+          }
+        }
+      }
+    },
+    "Environment": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Environnement"
+          }
+        }
+      }
+    },
+    "Environmental sound levels": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niveaux sonores ambiants"
+          }
+        }
+      }
+    },
+    "Exercise minutes": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minutes d'exercice"
+          }
+        }
+      }
+    },
+    "Failed (%@): %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec (%@) : %@"
+          }
+        }
+      }
+    },
+    "Failed (%@): Health is unreadable while the iPhone is locked": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec (%@) : Santé est illisible tant que l'iPhone est verrouillé"
+          }
+        }
+      }
+    },
+    "Fiber": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fibres"
+          }
+        }
+      }
+    },
+    "Flights climbed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étages montés"
+          }
+        }
+      }
+    },
+    "Headphone audio levels": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Niveaux audio du casque"
+          }
+        }
+      }
+    },
+    "Heart & respiration": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cœur et respiration"
+          }
+        }
+      }
+    },
+    "Heart rate": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence cardiaque"
+          }
+        }
+      }
+    },
+    "Heart rate recovery (1 min)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Récupération cardiaque (1 min)"
+          }
+        }
+      }
+    },
+    "Heart rate variability (SDNN)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Variabilité cardiaque (SDNN)"
+          }
+        }
+      }
+    },
+    "Height": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taille"
+          }
+        }
+      }
+    },
+    "History sent: %@ days (%@)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Historique envoyé : %@ jours (%@)"
+          }
+        }
+      }
+    },
+    "Home Assistant answered HTTP %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Home Assistant a répondu HTTP %@"
+          }
+        }
+      }
+    },
+    "Home Assistant journal": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journal Home Assistant"
+          }
+        }
+      }
+    },
+    "Home Assistant webhook": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Webhook Home Assistant"
+          }
+        }
+      }
+    },
+    "Import stopped after %@ days: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import interrompu après %@ jours : %@"
+          }
+        }
+      }
+    },
+    "Import stopped after %@ days: iPhone locked": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import interrompu après %@ jours : iPhone verrouillé"
+          }
+        }
+      }
+    },
+    "Importing history: %@ / %@ days…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import de l'historique : %@ / %@ jours…"
+          }
+        }
+      }
+    },
+    "Importing…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import en cours…"
+          }
+        }
+      }
+    },
+    "Invalid webhook URL": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL du webhook invalide"
+          }
+        }
+      }
+    },
+    "Last sent": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernier envoi"
+          }
+        }
+      }
+    },
+    "Lean body mass": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Masse maigre"
+          }
+        }
+      }
+    },
+    "Mobility": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mobilité"
+          }
+        }
+      }
+    },
+    "Never sent": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jamais envoyé"
+          }
+        }
+      }
+    },
+    "No data selected": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune donnée sélectionnée"
+          }
+        }
+      }
+    },
+    "Nutrition": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nutrition"
+          }
+        }
+      }
+    },
+    "Once at the start, or after selecting new data: sends the last 12 months, day by day, to the Home Assistant journal. Sensors are not changed.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une fois au départ, ou après avoir coché de nouvelles données : envoie les 12 derniers mois, jour par jour, au journal de Home Assistant. Les capteurs ne changent pas."
+          }
+        }
+      }
+    },
+    "Protein": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Protéines"
+          }
+        }
+      }
+    },
+    "Respiratory rate": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence respiratoire"
+          }
+        }
+      }
+    },
+    "Resting energy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Énergie au repos"
+          }
+        }
+      }
+    },
+    "Resting heart rate": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence cardiaque au repos"
+          }
+        }
+      }
+    },
+    "Save": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer"
+          }
+        }
+      }
+    },
+    "Select all": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout sélectionner"
+          }
+        }
+      }
+    },
+    "Selection": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sélection"
+          }
+        }
+      }
+    },
+    "Send 1 year of history": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envoyer 1 an d'historique"
+          }
+        }
+      }
+    },
+    "Sends on every launch. Pull down to send again (and ask Home Assistant for a summary, if set up).": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envoi à chaque ouverture. Tire vers le bas pour renvoyer (et demander un bilan à Home Assistant, s'il est configuré)."
+          }
+        }
+      }
+    },
+    "Sent (%@) on %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envoyé (%@) le %@"
+          }
+        }
+      }
+    },
+    "Six-minute walk": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test de marche de six minutes"
+          }
+        }
+      }
+    },
+    "Sleep": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sommeil"
+          }
+        }
+      }
+    },
+    "Sodium": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sodium"
+          }
+        }
+      }
+    },
+    "Stand minutes": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minutes debout"
+          }
+        }
+      }
+    },
+    "Step length": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Longueur de pas"
+          }
+        }
+      }
+    },
+    "Steps": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas"
+          }
+        }
+      }
+    },
+    "Sugar": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sucres"
+          }
+        }
+      }
+    },
+    "Swimming distance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance de natation"
+          }
+        }
+      }
+    },
+    "Swimming strokes": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mouvements de nage"
+          }
+        }
+      }
+    },
+    "Time in daylight": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Temps à la lumière du jour"
+          }
+        }
+      }
+    },
+    "Total fat": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lipides"
+          }
+        }
+      }
+    },
+    "VO2 max": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "VO2 max"
+          }
+        }
+      }
+    },
+    "Waist circumference": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tour de taille"
+          }
+        }
+      }
+    },
+    "Walking + running distance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance marche + course"
+          }
+        }
+      }
+    },
+    "Walking asymmetry": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asymétrie de marche"
+          }
+        }
+      }
+    },
+    "Walking heart rate average": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fréquence cardiaque moyenne à la marche"
+          }
+        }
+      }
+    },
+    "Walking speed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vitesse de marche"
+          }
+        }
+      }
+    },
+    "Walking steadiness": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stabilité de marche"
+          }
+        }
+      }
+    },
+    "Water": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eau"
+          }
+        }
+      }
+    },
+    "Weight": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Poids"
+          }
+        }
+      }
+    },
+    "Wrist temperature (sleep)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Température au poignet (sommeil)"
+          }
+        }
+      }
+    },
+    "app opened": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ouverture"
+          }
+        }
+      }
+    },
+    "background": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arrière-plan"
+          }
+        }
+      }
+    },
+    "configured": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "configurée"
+          }
+        }
+      }
+    },
+    "history": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "historique"
+          }
+        }
+      }
+    },
+    "link": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "lien"
+          }
+        }
+      }
+    },
+    "pull to refresh": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "tirer pour rafraîchir"
+          }
+        }
+      }
+    },
+    "settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "réglages"
+          }
+        }
+      }
+    }
+  }
+}
