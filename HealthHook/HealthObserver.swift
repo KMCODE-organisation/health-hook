@@ -23,7 +23,7 @@ enum HealthObserver {
         for q in queries { store.stop(q) }
         queries = []
         for type in observed.subtracting(types) {
-            store.disableBackgroundDelivery(for: type) { _, _ in }
+            try? await store.disableBackgroundDelivery(for: type)
         }
         observed = types
 
@@ -38,7 +38,7 @@ enum HealthObserver {
             }
             store.execute(query)
             queries.append(query)
-            store.enableBackgroundDelivery(for: type, frequency: .hourly) { _, _ in }
+            try? await store.enableBackgroundDelivery(for: type, frequency: .hourly)
         }
     }
 }
