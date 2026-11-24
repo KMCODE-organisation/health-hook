@@ -12,7 +12,7 @@
 #
 # Usage: reinstall.sh [--force]   (--force: reinstall whatever the date)
 # Optional settings in ~/Library/Application Support/HealthHook/config (VAR=value lines):
-#   TEAM=<Team ID>       default: DEVELOPMENT_TEAM from project.yml (never guessed from the keychain, which may
+#   TEAM=<Team ID>       default: DEVELOPMENT_TEAM from Local.xcconfig (never guessed from the keychain, which may
 #                        hold other people's certificates)
 #   IPHONE=<identifier>  default: the first paired iPhone (xcrun devicectl list devices)
 #   MARGIN_DAYS=2
@@ -30,7 +30,9 @@ MARGIN_DAYS=2; TEAM=""; IPHONE=""
 log() { echo "$(date '+%F %T') $*" >> "$LOG"; }
 notify() { osascript -e "display notification \"$2\" with title \"Health Hook\" subtitle \"$1\"" >/dev/null 2>&1 || true; }
 readable() { date -r "$1" '+%Y-%m-%d %H:%M'; }
-setting() { sed -n "s/^ *$1: *\"\{0,1\}\([^\" #]*\)\"\{0,1\}.*/\1/p" "$REPO/project.yml" | head -1; }
+# Build setting from Local.xcconfig (personal), else HealthHook.xcconfig (defaults)
+setting() { cat "$REPO/Local.xcconfig" "$REPO/HealthHook.xcconfig" 2>/dev/null \
+  | sed -n "s|^[[:space:]]*$1[[:space:]]*=[[:space:]]*\([^[:space:]/]*\).*|\1|p" | grep -m1 . ; }
 
 # One run at a time (a build can take longer than an hour); a lock older than 2 hours is taken over
 LOCK="$STATE/lock"
@@ -89,7 +91,7 @@ fail() {
   exit 1
 }
 
-[ -n "$TEAM" ] || fail "no Team ID (DEVELOPMENT_TEAM empty in project.yml, or TEAM in $STATE/config)"
+[ -n "$TEAM" ] || fail "no Team ID (set DEVELOPMENT_TEAM in Local.xcconfig, or TEAM in $STATE/config)"
 
 # 2. iPhone reachable?
 xcrun devicectl list devices --json-output "$TMP/devices.json" >/dev/null 2>&1 || { log "devicectl unavailable"; exit 0; }

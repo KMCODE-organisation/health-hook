@@ -2,6 +2,8 @@
 HealthHook.xcodeproj/
 HealthHook/Info.plist
 HealthHook/HealthHook.entitlements
+# Personal build settings (see Local.xcconfig.example)
+Local.xcconfig
 # Xcode
 xcuserdata/
 DerivedData/

@@ -1,0 +1,8 @@
+// Your personal build settings. Copy this file to Local.xcconfig (ignored by git), fill it in, then run `xcodegen`.
+//
+// BUNDLE_ID_PREFIX: something unique to you (reverse domain); the app id becomes <prefix>.healthhook
+// DEVELOPMENT_TEAM: your Team ID (a free Apple account works). If you don't know it: leave it empty, open the
+//                   project, pick your team in Signing & Capabilities, then run
+//                   grep -m1 DEVELOPMENT_TEAM HealthHook.xcodeproj/project.pbxproj
+BUNDLE_ID_PREFIX = com.yourname
+DEVELOPMENT_TEAM = ABCDE12345
