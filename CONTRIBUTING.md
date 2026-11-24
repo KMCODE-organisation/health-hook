@@ -17,6 +17,7 @@ Thanks for your interest! Bug reports, ideas and pull requests are welcome.
 | `HealthHook/Catalog.swift` | the list of Health metrics (JSON keys, units, kinds) |
 | `HealthHook/Localizable.xcstrings` | UI strings, English (source) + French |
 | `project.yml` | XcodeGen project description (the `.xcodeproj` is generated, not committed) |
+| `HealthHook.xcconfig` | shared build settings; includes your git-ignored `Local.xcconfig` |
 | `homeassistant/packages/health_hook.yaml` | Home Assistant package, **generated** by `tools/generate_ha_package.py` |
 | `homeassistant/packages/health_hook_summary.yaml` | optional AI summary package (hand-written) |
 | `homeassistant/health_hook/journal.py` | daily journal script run by Home Assistant (Python standard library only) |
@@ -29,8 +30,9 @@ brew install xcodegen
 xcodegen && open HealthHook.xcodeproj
 ```
 
-Set `BUNDLE_ID_PREFIX` and `DEVELOPMENT_TEAM` in `project.yml` for your own builds, but **do not commit them**:
-they must stay generic (`com.example` and `""`) in the repository.
+Put your `BUNDLE_ID_PREFIX` and `DEVELOPMENT_TEAM` in `Local.xcconfig` (copy `Local.xcconfig.example`). It is ignored
+by git: never commit personal values, and never set these two settings in `project.yml` (they would override
+`Local.xcconfig`).
 
 ## Adding a Health metric
 

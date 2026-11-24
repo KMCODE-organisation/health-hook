@@ -1,0 +1,6 @@
+// Shared build settings (committed). Do not put your own values here:
+// copy Local.xcconfig.example to Local.xcconfig (ignored by git) and fill it in. It overrides the defaults below.
+BUNDLE_ID_PREFIX = com.example
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"

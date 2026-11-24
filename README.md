@@ -83,7 +83,13 @@ git clone https://github.com/KMCODE-organisation/health-hook.git
 cd health-hook
 ```
 
-Edit the top of [`project.yml`](project.yml):
+Create your personal settings file (ignored by git, so `git pull` never conflicts with it):
+
+```bash
+cp Local.xcconfig.example Local.xcconfig
+```
+
+and fill it in:
 
 - `BUNDLE_ID_PREFIX`: something unique to you (e.g. `com.yourname`); the app id becomes `<prefix>.healthhook`.
 - `DEVELOPMENT_TEAM`: your Team ID. If you don't know it, leave it empty, open the project, pick your team in
@@ -181,7 +187,8 @@ l'app doit alors être réinstallée tous les 7 jours), un Home Assistant joigna
    `homeassistant/packages/health_hook.yaml` dans `/config/packages/` et `homeassistant/health_hook/journal.py` dans
    `/config/health_hook/` (et `health_hook_summary.yaml` pour le bilan IA), remplace `notify.notify` par la
    notification de ton téléphone, redémarre.
-2. L'app : renseigne `BUNDLE_ID_PREFIX` et `DEVELOPMENT_TEAM` en haut de `project.yml`, puis `xcodegen`,
+2. L'app : `cp Local.xcconfig.example Local.xcconfig`, renseigne `BUNDLE_ID_PREFIX` et `DEVELOPMENT_TEAM` dans
+   `Local.xcconfig` (ignoré par git), puis `xcodegen`,
    `open HealthHook.xcodeproj`, Mode développeur sur l'iPhone, ▶︎.
 3. Premier lancement : colle l'URL `https://<ton Home Assistant>/api/webhook/<id>`, autorise Santé, choisis les données,
    puis « Envoyer 1 an d'historique » si tu veux remplir le journal.
