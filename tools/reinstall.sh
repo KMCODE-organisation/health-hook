@@ -131,4 +131,4 @@ NEW=$(profiles_expiration "$APP/embedded.mobileprovision")
 xcrun devicectl device install app --device "$ID" "$APP" >> "$LOG" 2>&1 || fail "install on the iPhone"
 echo "$NEW" > "$EXPIRATION"
 log "OK: app reinstalled, valid until $(readable "$NEW")"
-notify "App reinstalled" "Valid until $(readable "$NEW"). Open it once to update the date in Home Assistant."
+notify "App reinstalled" "Valid until $(readable "$NEW"). The date in Home Assistant is updated at the next sync (pull down in the app to send now)."

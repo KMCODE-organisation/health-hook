@@ -142,6 +142,16 @@
         }
       }
     },
+    "Cancel": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        }
+      }
+    },
     "Carbohydrates": {
       "localizations": {
         "fr": {
@@ -602,12 +612,12 @@
         }
       }
     },
-    "Sends on every launch. Pull down to send again (and ask Home Assistant for a summary, if set up).": {
+    "Sends when Apple Health gets new data, even when the app is closed (at most every few minutes; not while the iPhone is locked). Pull down to send now and ask Home Assistant for a summary, if set up.": {
       "localizations": {
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Envoi à chaque ouverture. Tire vers le bas pour renvoyer (et demander un bilan à Home Assistant, s'il est configuré)."
+            "value": "Envoi dès qu'Apple Santé reçoit de nouvelles données, même app fermée (au plus toutes les quelques minutes ; pas quand l'iPhone est verrouillé). Tire vers le bas pour envoyer tout de suite et demander un bilan à Home Assistant, s'il est configuré."
           }
         }
       }
@@ -732,6 +742,26 @@
         }
       }
     },
+    "Use it": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser"
+          }
+        }
+      }
+    },
+    "Use this Home Assistant?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utiliser ce Home Assistant ?"
+          }
+        }
+      }
+    },
     "VO2 max": {
       "localizations": {
         "fr": {
@@ -832,12 +862,12 @@
         }
       }
     },
-    "app opened": {
+    "Your Health data will be sent to %@. Only accept a link that comes from your own Home Assistant.": {
       "localizations": {
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "ouverture"
+            "value": "Tes données Santé seront envoyées à %@. N'accepte qu'un lien venant de ton propre Home Assistant."
           }
         }
       }
@@ -878,6 +908,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "lien"
+          }
+        }
+      }
+    },
+    "new Health data": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "nouvelles données Santé"
           }
         }
       }

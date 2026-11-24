@@ -21,7 +21,8 @@ Thanks for your interest! Bug reports, ideas and pull requests are welcome.
 | `homeassistant/packages/health_hook.yaml` | Home Assistant package, **generated** by `tools/generate_ha_package.py` |
 | `homeassistant/packages/health_hook_summary.yaml` | optional AI summary package (hand-written) |
 | `homeassistant/health_hook/journal.py` | daily journal script run by Home Assistant (Python standard library only) |
-| `tools/` | Mac helpers (auto-reinstall), package generator, icon source |
+| `tools/` | Mac helpers (auto-reinstall, setup QR code), package generator, consistency checks and tests, icon source |
+| `.github/workflows/ci.yml` | CI: checks and tests, unsigned build of the app |
 
 ## Building
 
@@ -48,13 +49,18 @@ A metric lives in three places that must stay in sync:
    `python3 tools/generate_ha_package.py`, and commit the regenerated `health_hook.yaml`.
    Also add the unit to `UNITS` in `homeassistant/health_hook/journal.py`.
 
+Then run `python3 tools/check.py`: it fails if the app, the Home Assistant sensors, the journal units and the
+translations do not match.
+
 Never rename or remove an existing key: it would break users' sensors and history.
 
 ## Pull requests
 
 - One topic per pull request, with a short description of what and why.
 - Code, comments and commit messages in English; keep the French translation complete for UI strings.
-- Check that the app builds and that a sync still reaches Home Assistant.
+- Run `python3 tools/check.py` and `python3 -m unittest discover -s tools -p "test_*.py"` (CI runs them too, and
+  builds the app without signing).
+- Check that the app runs on an iPhone and that a sync still reaches Home Assistant (CI cannot test HealthKit).
 - For Home Assistant changes: `ha core check` (or *Developer tools → YAML → Check configuration*) must pass.
 - No new dependencies in the app or in `journal.py`.
 

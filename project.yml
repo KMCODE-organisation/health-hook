@@ -49,3 +49,5 @@ targets:
       properties:
         com.apple.developer.healthkit: true
         com.apple.developer.healthkit.access: []
+        # HKObserverQuery wake-ups when Apple Health gets new data (HealthObserver.swift)
+        com.apple.developer.healthkit.background-delivery: true

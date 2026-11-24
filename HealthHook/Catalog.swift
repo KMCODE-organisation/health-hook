@@ -155,4 +155,13 @@ enum Catalog {
         for m in metrics { if let q = m.quantity { types.insert(HKQuantityType(q)) } }
         return types
     }
+
+    /// Health types of the selected metrics (watched by `HealthObserver`).
+    static func sampleTypes(for ids: Set<String>) -> Set<HKSampleType> {
+        var types: Set<HKSampleType> = []
+        for m in metrics where ids.contains(m.id) {
+            types.insert(m.quantity.map { HKQuantityType($0) } ?? HKCategoryType(.sleepAnalysis))
+        }
+        return types
+    }
 }

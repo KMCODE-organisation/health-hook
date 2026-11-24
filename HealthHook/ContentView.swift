@@ -15,20 +15,20 @@ struct ContentView: View {
                     }
                 } footer: {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Sends on every launch. Pull down to send again (and ask Home Assistant for a summary, if set up).")
+                        Text("Sends when Apple Health gets new data, even when the app is closed (at most every few minutes; not while the iPhone is locked). Pull down to send now and ask Home Assistant for a summary, if set up.")
                         if let end = SigningProfile.expiration {
                             Text("App valid until \(end.formatted(date: .abbreviated, time: .shortened)).")
                         }
                     }
                 }
 
-                if let p = sync.last {
+                if let values = sync.last {
                     Section("Last sent") {
                         ForEach(Catalog.metrics) { m in
-                            if let v = p.values[m.id] {   // key present = metric selected (value may be null)
+                            if let v = values[m.id] {   // key present = metric selected (value may be null)
                                 row(m.localizedTitle, v.map(m.format))
-                                if m.minMax, let mn = p.values[m.id + "_min"] ?? nil, let av = p.values[m.averageKey] ?? nil,
-                                   let mx = p.values[m.id + "_max"] ?? nil {
+                                if m.minMax, let mn = values[m.id + "_min"] ?? nil, let av = values[m.averageKey] ?? nil,
+                                   let mx = values[m.id + "_max"] ?? nil {
                                     row(String(localized: "\(m.localizedTitle) today (min / avg / max)"),
                                         "\(m.format(mn)) / \(m.format(av)) / \(m.format(mx))")
                                 }
@@ -74,6 +74,15 @@ struct ContentView: View {
             }
             .navigationTitle("Health Hook")
             .refreshable { await sync.send(.manual, force: true) }
+            .alert("Use this Home Assistant?", isPresented: Binding(
+                get: { sync.proposedURL != nil },
+                set: { if !$0 { sync.dismissProposal() } }
+            ), presenting: sync.proposedURL) { url in
+                Button("Use it") { sync.saveURL(url) }
+                Button("Cancel", role: .cancel) { sync.dismissProposal() }
+            } message: { url in
+                Text("Your Health data will be sent to \(URL(string: url)?.host() ?? url). Only accept a link that comes from your own Home Assistant.")
+            }
         }
     }
 

@@ -23,9 +23,10 @@ Apple Health works as a source: iPhone, Apple Watch, smart rings, scales, blood 
 - **~50 metrics**, selectable in the app: activity (steps, distances, energy, exercise…), heart (heart rate with daily
   min / avg / max, resting HR, HRV, blood oxygen, VO2 max, blood pressure…), sleep, body (weight, body fat…),
   mobility, sound exposure, nutrition.
-- **Sends when you open the app**, when you pull to refresh, from a `healthhook://send` link (e.g. in a Home Assistant
-  notification) and in the background when iOS allows it.
-- **Last 7 days** in every payload, so Home Assistant catches up on days when the app was not opened.
+- **Sends when Apple Health gets new data**, even when the app is closed (HealthKit background delivery: iOS wakes
+  the app at most once an hour per data type), when you pull to refresh, and from a `healthhook://send` link (e.g. in
+  a Home Assistant notification).
+- **Last 7 days** in every payload, so Home Assistant catches up on missed syncs.
   **One-tap import of a full year** of history.
 - **Home Assistant package**: one sensor per metric (long-term statistics included), a daily **journal**
   (`journal.jsonl`, one line per day, kept forever, ~1 KB/day), an **app expiration** sensor and reminder.
@@ -105,7 +106,12 @@ The first time, trust your certificate in Settings → General → VPN & Device 
 
 ### 3. First launch
 
-1. Paste the webhook URL in the app and tap **Save**.
+1. Give the app its webhook URL, one of three ways (the app always asks you to confirm the address):
+   - **Setup link**: in Home Assistant, run the script **Health Hook — send the setup link** (Settings → Automations
+     & scenes → Scripts) with the address the iPhone uses to reach Home Assistant, then tap the notification.
+   - **QR code**: on your Mac, `brew install qrencode`, then `./tools/setup-qr.sh` (asks for the URL) and scan the
+     code with the iPhone's Camera app. Made locally: the URL is not sent anywhere.
+   - **By hand**: paste it in the app and tap **Save**.
 2. Allow access to the Health data (iOS asks once per data type).
 3. Choose the data to send in **Data to send**.
 4. Optional: tap **Send 1 year of history** to fill the journal.
@@ -144,10 +150,12 @@ With a paid Apple Developer account, profiles last one year.
 - Daily totals (steps, energy, nutrition…) are **today's** totals; other metrics are the **latest sample** (its date in
   `dates`). Sleep is the night that ended today.
 - `days`: daily totals / averages for the last 7 days (30-day batches for a history import).
-- `source`: `open`, `manual` (pull to refresh, triggers the AI summary), `link`, `background`, `settings`, `history`.
+- `source`: `health` (new Health data), `manual` (pull to refresh, triggers the AI summary), `link`, `background`,
+  `settings`, `history`.
 
 Keys and units: [`HealthHook/Catalog.swift`](HealthHook/Catalog.swift). The Home Assistant package is generated from
-[`tools/generate_ha_package.py`](tools/generate_ha_package.py): add a metric in both places.
+[`tools/generate_ha_package.py`](tools/generate_ha_package.py): add a metric in both places (`tools/check.py`, run
+by CI, fails if they differ).
 
 ## Privacy
 
@@ -157,8 +165,9 @@ model (e.g. Ollama) to keep everything at home.
 
 ## Limitations
 
-- iOS keeps Health data encrypted while the iPhone is locked: syncs only work when it is unlocked.
-- Background refresh is decided by iOS and not guaranteed; opening the app always sends.
+- iOS keeps Health data encrypted while the iPhone is locked: syncs only work when it is unlocked (a wake-up while it
+  is locked is skipped, the next one catches up). Automatic syncs are at least 5 minutes apart.
+- iOS decides when to wake the app and may delay it (Low Power Mode, app rarely used). Pull to refresh always sends.
 - Each user builds the app with their own Apple ID (no App Store or TestFlight distribution).
 
 ## Contributing
@@ -190,11 +199,14 @@ l'app doit alors être réinstallée tous les 7 jours), un Home Assistant joigna
 2. L'app : `cp Local.xcconfig.example Local.xcconfig`, renseigne `BUNDLE_ID_PREFIX` et `DEVELOPMENT_TEAM` dans
    `Local.xcconfig` (ignoré par git), puis `xcodegen`,
    `open HealthHook.xcodeproj`, Mode développeur sur l'iPhone, ▶︎.
-3. Premier lancement : colle l'URL `https://<ton Home Assistant>/api/webhook/<id>`, autorise Santé, choisis les données,
-   puis « Envoyer 1 an d'historique » si tu veux remplir le journal.
+3. Premier lancement : donne l'URL `https://<ton Home Assistant>/api/webhook/<id>` à l'app, au choix avec le script
+   HA « Health Hook — send the setup link » (notification à toucher), avec un QR code fait sur le Mac
+   (`./tools/setup-qr.sh`, avec `qrencode`) scanné par l'appareil photo, ou en la collant ; l'app demande toujours
+   confirmation. Autorise Santé, choisis les données, puis « Envoyer 1 an d'historique » si tu veux remplir le journal.
 
-**Envois** : à l'ouverture de l'app, en tirant vers le bas (déclenche le bilan IA), via le lien `healthhook://send`, et
-en arrière-plan quand iOS le permet. Chaque envoi contient aussi les 7 derniers jours.
+**Envois** : dès qu'Apple Santé reçoit de nouvelles données, même app fermée (iOS réveille l'app au plus une fois par
+heure et par type de donnée ; envois espacés d'au moins 5 minutes ; pas quand l'iPhone est verrouillé), en tirant vers
+le bas (déclenche le bilan IA) et via le lien `healthhook://send`. Chaque envoi contient aussi les 7 derniers jours.
 
 **Compte gratuit (7 jours)** : Home Assistant prévient la veille de l'expiration, et `tools/install-auto-reinstall.sh`
 installe sur le Mac une tâche qui réinstalle l'app toute seule quand il reste moins de 2 jours (iPhone sur le même Wi-Fi
