@@ -52,6 +52,16 @@
         }
       }
     },
+    "Automatic syncs": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envois automatiques"
+          }
+        }
+      }
+    },
     "Blood glucose": {
       "localizations": {
         "fr": {
@@ -268,6 +278,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Minutes d'exercice"
+          }
+        }
+      }
+    },
+    "Failed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec"
           }
         }
       }
@@ -502,6 +522,16 @@
         }
       }
     },
+    "No automatic sync yet": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun envoi automatique pour l’instant"
+          }
+        }
+      }
+    },
     "No data selected": {
       "localizations": {
         "fr": {
@@ -622,6 +652,16 @@
         }
       }
     },
+    "Sent": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Envoyé"
+          }
+        }
+      }
+    },
     "Sent (%@) on %@": {
       "localizations": {
         "fr": {
@@ -638,6 +678,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Test de marche de six minutes"
+          }
+        }
+      }
+    },
+    "Skipped (sent less than 5 minutes ago)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignoré (envoi il y a moins de 5 minutes)"
           }
         }
       }
@@ -668,6 +718,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Minutes debout"
+          }
+        }
+      }
+    },
+    "Started by iOS when Apple Health gets new data. “iPhone locked”: Health data cannot be read while the iPhone is locked; the app asks iOS to try again a bit later.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lancés par iOS quand Apple Santé reçoit de nouvelles données. « iPhone verrouillé » : les données Santé sont illisibles tant que l’iPhone est verrouillé ; l’app demande à iOS de réessayer un peu plus tard."
           }
         }
       }
@@ -882,6 +942,16 @@
         }
       }
     },
+    "app open": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "app ouverte"
+          }
+        }
+      }
+    },
     "background": {
       "localizations": {
         "fr": {
@@ -908,6 +978,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "historique"
+          }
+        }
+      }
+    },
+    "iPhone locked": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone verrouillé"
+          }
+        }
+      }
+    },
+    "in the background": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "en arrière-plan"
           }
         }
       }

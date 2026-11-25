@@ -40,6 +40,8 @@ struct Payload: Encodable {
     var sentAt: String
     /// End of validity of the app's signing profile (free Apple account: 7 days).
     var expiresAt: String? = nil
+    /// Last automatic syncs, newest first (see `Wake`).
+    var wakes: [Wake] = []
 
     func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: Key.self)
@@ -51,6 +53,7 @@ struct Payload: Encodable {
         try c.encode(source, forKey: Key("source"))
         try c.encode(sentAt, forKey: Key("sent_at"))
         if let expiresAt { try c.encode(expiresAt, forKey: Key("expires_at")) }
+        if !wakes.isEmpty { try c.encode(wakes, forKey: Key("wakes")) }
     }
 }
 

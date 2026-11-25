@@ -1,6 +1,7 @@
 import Foundation
 import BackgroundTasks
 import HealthKit
+import UIKit
 
 /// Why a sync was started. The raw value is sent as `source` (Home Assistant uses `manual` to trigger the summary).
 enum SyncSource: String {
@@ -25,11 +26,40 @@ enum BackgroundRefresh {
     /// Must match `BGTaskSchedulerPermittedIdentifiers` in project.yml (`$(PRODUCT_BUNDLE_IDENTIFIER).send`).
     static let identifier = (Bundle.main.bundleIdentifier ?? "healthhook") + ".send"
 
-    /// Asks iOS for a background refresh, 6 hours from now at the earliest (iOS picks the actual time).
-    static func schedule() {
+    /// Asks iOS for a background refresh, `delay` from now at the earliest (iOS picks the actual time).
+    /// A new request replaces the pending one.
+    static func schedule(after delay: TimeInterval = 6 * 3600) {
         let request = BGAppRefreshTaskRequest(identifier: identifier)
-        request.earliestBeginDate = Date().addingTimeInterval(6 * 3600)
+        request.earliestBeginDate = Date().addingTimeInterval(delay)
         try? BGTaskScheduler.shared.submit(request)
+    }
+}
+
+/// An automatic sync (new Health data, background refresh) and what came of it: shows whether and when iOS wakes the
+/// app. The last ones are listed in the app and sent to Home Assistant with each payload (`wakes`).
+struct Wake: Codable, Identifiable {
+    enum Result: String, Codable {
+        case sent, locked, throttled, failed
+    }
+    /// ISO 8601 (UTC), as in the payload.
+    var at: String
+    var source: String
+    var result: Result
+    /// false = the app was open (e.g. the sync that follows opening it), true = iOS ran it in the background.
+    var background: Bool
+    /// Identical results in a row (e.g. several "throttled" when many data types change at once).
+    var count = 1
+
+    var id: String { at + source + result.rawValue }
+    var date: Date? { try? Date(at, strategy: .iso8601) }
+
+    var label: String {
+        switch result {
+        case .sent: return String(localized: "Sent")
+        case .locked: return String(localized: "iPhone locked")
+        case .throttled: return String(localized: "Skipped (sent less than 5 minutes ago)")
+        case .failed: return String(localized: "Failed")
+        }
     }
 }
 
@@ -61,6 +91,8 @@ final class Sync: ObservableObject {
     @Published private(set) var urlConfigured: Bool
     /// Ids (`Metric.id`) of the metrics to send.
     @Published private(set) var selected: Set<String>
+    /// Automatic syncs, newest first (kept between launches).
+    @Published private(set) var wakes: [Wake] = []
 
     private let health = HealthReader()
     private var lastAttempt: Date?
@@ -77,6 +109,9 @@ final class Sync: ObservableObject {
         }
         if let data = UserDefaults.standard.data(forKey: "lastValues") {
             last = try? JSONDecoder().decode([String: Double?].self, from: data)
+        }
+        if let data = UserDefaults.standard.data(forKey: "wakes") {
+            wakes = (try? JSONDecoder().decode([Wake].self, from: data)) ?? []
         }
     }
 
@@ -145,18 +180,21 @@ final class Sync: ObservableObject {
 
     /// `force` skips the 20-second de-duplication (opening from a link = foreground + link, almost simultaneous).
     func send(_ source: SyncSource, force: Bool = false) async {
+        // Not logged: another sync is running or has just run (its own result is logged).
         guard !sending, !importing else { return }
         if !force, let d = lastAttempt, Date().timeIntervalSince(d) < 20 { return }
         if source.automatic, let d = UserDefaults.standard.object(forKey: "lastSuccess") as? Date,
-           Date().timeIntervalSince(d) < Self.automaticInterval { return }
+           Date().timeIntervalSince(d) < Self.automaticInterval { return log(source, .throttled) }
         guard let url = webhook() else { return }
         sending = true
         lastAttempt = Date()
         defer { sending = false }
 
         do {
-            let payload = try await health.read(source: source.rawValue, selected: selected)
+            var payload = try await health.read(source: source.rawValue, selected: selected)
+            payload.wakes = Array(wakes.prefix(Self.wakesSent))
             try await post(payload, to: url)
+            log(source, .sent)
             last = payload.values
             UserDefaults.standard.set(try? JSONEncoder().encode(payload.values), forKey: "lastValues")
             UserDefaults.standard.set(Date(), forKey: "lastSuccess")
@@ -164,13 +202,40 @@ final class Sync: ObservableObject {
             // First sync: Health access has just been granted, the observers can start.
             await HealthObserver.start(for: selected)
         } catch let error as HKError where error.code == .errorDatabaseInaccessible {
-            // Locked iPhone: normal for an automatic sync (the next one will catch up), not worth a failure status.
-            if !source.automatic {
+            // Locked iPhone: normal for an automatic sync, not worth a failure status. iOS only wakes the app again
+            // for newer Health data (at most once an hour): a background refresh is asked for soon, to catch up.
+            log(source, .locked)
+            if source.automatic {
+                BackgroundRefresh.schedule(after: Self.retryAfterLocked)
+            } else {
                 update(String(localized: "Failed (\(source.label)): Health is unreadable while the iPhone is locked"))
             }
         } catch {
+            log(source, .failed)
             update(String(localized: "Failed (\(source.label)): \(error.localizedDescription)"))
         }
+    }
+
+    /// Wakes kept in the app / sent to Home Assistant with each payload.
+    private static let wakesKept = 30
+    private static let wakesSent = 10
+    /// Earliest background refresh after a wake-up while the iPhone was locked (iOS picks the actual time).
+    private static let retryAfterLocked: TimeInterval = 15 * 60
+
+    /// Logs the result of an automatic sync (other sources show their result in the status line).
+    private func log(_ source: SyncSource, _ result: Wake.Result) {
+        guard source.automatic else { return }
+        let background = UIApplication.shared.applicationState != .active
+        if var first = wakes.first, first.source == source.rawValue, first.result == result,
+           first.background == background, result != .sent {
+            first.count += 1
+            wakes[0] = first
+        } else {
+            let at = Date().formatted(.iso8601)
+            wakes.insert(Wake(at: at, source: source.rawValue, result: result, background: background), at: 0)
+            if wakes.count > Self.wakesKept { wakes.removeLast(wakes.count - Self.wakesKept) }
+        }
+        UserDefaults.standard.set(try? JSONEncoder().encode(wakes), forKey: "wakes")
     }
 
     /// History import for the Home Assistant journal: `days` only (sensors untouched), source `history`,

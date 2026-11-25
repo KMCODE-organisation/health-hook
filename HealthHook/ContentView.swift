@@ -38,6 +38,26 @@ struct ContentView: View {
                 }
 
                 Section {
+                    if sync.wakes.isEmpty {
+                        Text("No automatic sync yet")
+                            .foregroundStyle(.secondary)
+                    }
+                    ForEach(sync.wakes.prefix(5)) { w in
+                        LabeledContent {
+                            Text(w.label + (w.count > 1 ? " ×\(w.count)" : ""))
+                        } label: {
+                            Text(w.date?.formatted(date: .abbreviated, time: .shortened) ?? w.at)
+                            Text((SyncSource(rawValue: w.source)?.label ?? w.source) + " · "
+                                 + (w.background ? String(localized: "in the background") : String(localized: "app open")))
+                        }
+                    }
+                } header: {
+                    Text("Automatic syncs")
+                } footer: {
+                    Text("Started by iOS when Apple Health gets new data. “iPhone locked”: Health data cannot be read while the iPhone is locked; the app asks iOS to try again a bit later.")
+                }
+
+                Section {
                     NavigationLink("Data to send") { MetricsView() }
                 } footer: {
                     Text("\(String(sync.selected.count)) selected.")

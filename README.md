@@ -139,9 +139,10 @@ With a paid Apple Developer account, profiles last one year.
   "hrv": null,
   "dates": { "heart_rate": "2026-11-23T21:58:00Z" },
   "days": [ { "date": "2026-11-17", "steps": 10275, "sleep": 6.9, "heart_rate_avg": 70 }, "…7 days" ],
-  "source": "open",
+  "source": "health",
   "sent_at": "2026-11-23T22:12:42Z",
-  "expires_at": "2026-11-30T16:42:11Z"
+  "expires_at": "2026-11-30T16:42:11Z",
+  "wakes": [ { "at": "2026-11-23T21:05:10Z", "source": "health", "result": "locked", "background": true, "count": 1 } ]
 }
 ```
 
@@ -152,6 +153,10 @@ With a paid Apple Developer account, profiles last one year.
 - `days`: daily totals / averages for the last 7 days (30-day batches for a history import).
 - `source`: `health` (new Health data), `manual` (pull to refresh, triggers the AI summary), `link`, `background`,
   `settings`, `history`.
+- `wakes`: the last 10 automatic syncs, newest first, and their `result`: `sent`, `locked` (iPhone locked, Health
+  unreadable), `throttled` (less than 5 minutes after the previous sync), `failed`. `background`: false when the app
+  was open. Shows whether and when iOS wakes the app (also listed in the app, under *Automatic syncs*). Kept in the
+  `payload` attribute of `sensor.health_hook_last_sync`.
 
 Keys and units: [`HealthHook/Catalog.swift`](HealthHook/Catalog.swift). The Home Assistant package is generated from
 [`tools/generate_ha_package.py`](tools/generate_ha_package.py): add a metric in both places (`tools/check.py`, run
@@ -166,7 +171,8 @@ model (e.g. Ollama) to keep everything at home.
 ## Limitations
 
 - iOS keeps Health data encrypted while the iPhone is locked: syncs only work when it is unlocked (a wake-up while it
-  is locked is skipped, the next one catches up). Automatic syncs are at least 5 minutes apart.
+  is locked is skipped and the app asks iOS for a background refresh about 15 minutes later to catch up; iOS decides
+  when it actually runs). Automatic syncs are at least 5 minutes apart.
 - iOS decides when to wake the app and may delay it (Low Power Mode, app rarely used). Pull to refresh always sends.
 - Each user builds the app with their own Apple ID (no App Store or TestFlight distribution).
 
@@ -205,7 +211,8 @@ l'app doit alors être réinstallée tous les 7 jours), un Home Assistant joigna
    confirmation. Autorise Santé, choisis les données, puis « Envoyer 1 an d'historique » si tu veux remplir le journal.
 
 **Envois** : dès qu'Apple Santé reçoit de nouvelles données, même app fermée (iOS réveille l'app au plus une fois par
-heure et par type de donnée ; envois espacés d'au moins 5 minutes ; pas quand l'iPhone est verrouillé), en tirant vers
+heure et par type de donnée ; envois espacés d'au moins 5 minutes ; pas quand l'iPhone est verrouillé : l'app redemande alors un envoi à iOS un peu plus tard ; la liste « Envois
+automatiques » de l'app et la clé `wakes` du JSON montrent ce qui s'est passé), en tirant vers
 le bas (déclenche le bilan IA) et via le lien `healthhook://send`. Chaque envoi contient aussi les 7 derniers jours.
 
 **Compte gratuit (7 jours)** : Home Assistant prévient la veille de l'expiration, et `tools/install-auto-reinstall.sh`
