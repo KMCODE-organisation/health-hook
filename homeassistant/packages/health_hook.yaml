@@ -20,8 +20,9 @@ automation:
     alias: Health Hook — receive
     description: >-
       Receives the Health Hook webhook: updates the sensors (event health_hook_received, not for history imports),
-      merges the daily values into /config/health_hook/journal.jsonl, and fires health_hook_manual_sync after a
-      pull-to-refresh in the app (used by the optional AI summary package).
+      merges the daily values into /config/health_hook/journal.jsonl, then fires health_hook_synced (journal up to
+      date, not for history imports) and, after a pull-to-refresh in the app, health_hook_manual_sync (both used by
+      the optional AI summary package).
     mode: queued
     max: 30
     triggers:
@@ -45,6 +46,11 @@ automation:
             data:
               b64: "{{ {'days': payload.days} | to_json | base64_encode }}"
             continue_on_error: true
+      - if: "{{ source != 'history' }}"
+        then:
+          - event: health_hook_synced
+            event_data:
+              source: "{{ source }}"
       - if: "{{ source == 'manual' }}"
         then:
           - event: health_hook_manual_sync

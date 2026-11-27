@@ -31,7 +31,8 @@ Apple Health works as a source: iPhone, Apple Watch, smart rings, scales, blood 
 - **Home Assistant package**: one sensor per metric (long-term statistics included), a daily **journal**
   (`journal.jsonl`, one line per day, kept forever, ~1 KB/day), an **app expiration** sensor and reminder.
 - **Optional AI summary** with any Home Assistant AI Task provider (OpenAI, Anthropic, Google, Ollama…): one sentence
-  on your trend and one suggestion, only when there is new data. The input sent to the model has a fixed size,
+  on your trend and one suggestion, only when there is new data, after a pull to refresh or (option `summary_on:
+  every_sync`) after every automatic sync. The input sent to the model has a fixed size,
   whatever the length of your history.
 - The webhook URL is stored in the iOS Keychain. Health data only goes to your Home Assistant.
 
@@ -152,7 +153,8 @@ With a paid Apple Developer account, profiles last one year.
   `dates`). Sleep is the night that ended today.
 - `days`: daily totals / averages for the last 7 days (30-day batches for a history import).
 - `source`: `health` (new Health data), `manual` (pull to refresh, triggers the AI summary), `link`, `background`,
-  `settings`, `history`.
+  `settings`, `history`. Once the journal is updated, Home Assistant fires `health_hook_synced` (with `source`, not
+  for `history`) and, for `manual`, `health_hook_manual_sync`.
 - `wakes`: the last 10 automatic syncs, newest first, and their `result`: `sent`, `locked` (iPhone locked, Health
   unreadable), `throttled` (less than 5 minutes after the previous sync), `failed`. `background`: false when the app
   was open. Shows whether and when iOS wakes the app (also listed in the app, under *Automatic syncs*). Kept in the
@@ -213,7 +215,8 @@ l'app doit alors être réinstallée tous les 7 jours), un Home Assistant joigna
 **Envois** : dès qu'Apple Santé reçoit de nouvelles données, même app fermée (iOS réveille l'app au plus une fois par
 heure et par type de donnée ; envois espacés d'au moins 5 minutes ; pas quand l'iPhone est verrouillé : l'app redemande alors un envoi à iOS un peu plus tard ; la liste « Envois
 automatiques » de l'app et la clé `wakes` du JSON montrent ce qui s'est passé), en tirant vers
-le bas (déclenche le bilan IA) et via le lien `healthhook://send`. Chaque envoi contient aussi les 7 derniers jours.
+le bas (déclenche le bilan IA ; avec `summary_on: every_sync` dans `health_hook_summary.yaml`, chaque envoi
+automatique le déclenche aussi : un appel à l'IA et une notification à chaque fois) et via le lien `healthhook://send`. Chaque envoi contient aussi les 7 derniers jours.
 
 **Compte gratuit (7 jours)** : Home Assistant prévient la veille de l'expiration, et `tools/install-auto-reinstall.sh`
 installe sur le Mac une tâche qui réinstalle l'app toute seule quand il reste moins de 2 jours (iPhone sur le même Wi-Fi

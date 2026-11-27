@@ -1,22 +1,38 @@
 # Health Hook — optional AI summary (requires health_hook.yaml, the journal script and an AI Task entity)
 #
-# After a pull-to-refresh in the app, sends a compact, fixed-size summary of the journal (7/30/90-day averages per
+# After a pull-to-refresh in the app (or after every sync, see `summary_on` below), sends a compact, fixed-size summary of the journal (7/30/90-day averages per
 # metric, days since the previous summary, previous summary as memory) to an AI Task entity (OpenAI, Anthropic,
 # Google, Ollama…: Settings → Devices & services). No new summary when the journal has not changed.
 # Result: sensor.health_hook_summary (attribute `text`) + a notification.
 #
 # ⚠ Privacy: with a cloud AI provider, these health figures leave your home. Use a local model (Ollama) to avoid it.
 #
-# To adapt: `language`, the notify action (notify.notify), and ai_task `entity_id` if you have no default
-# AI Task entity (Settings → System → General → AI suggestions).
+# To adapt: `language`, the notify action (notify.notify), ai_task `entity_id` if you have no default
+# AI Task entity (Settings → System → General → AI suggestions), and `summary_on`:
+#   manual      (default) only after a pull-to-refresh in the app;
+#   every_sync  also after every automatic sync with new data (up to one per Health data type per hour, as iOS
+#               wakes the app): one AI call and one notification each time. A sync arriving while a summary is
+#               being written is skipped; its data is in the next summary.
 
 automation:
   - id: health_hook_summary_on_manual_sync
-    alias: Health Hook — summary after a manual sync
+    alias: Health Hook — summary after a sync
     mode: single
+    max_exceeded: silent
+    variables:
+      summary_on: manual  # manual | every_sync
     triggers:
       - trigger: event
         event_type: health_hook_manual_sync
+        id: manual
+      - trigger: event
+        event_type: health_hook_synced
+        id: sync
+    conditions:
+      # A pull-to-refresh fires both events: only the manual one starts the summary.
+      - condition: template
+        value_template: >-
+          {{ trigger.id == 'manual' or (summary_on == 'every_sync' and trigger.event.data.source != 'manual') }}
     actions:
       - action: script.turn_on
         target:
